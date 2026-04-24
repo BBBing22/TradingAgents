@@ -2,7 +2,7 @@ import unittest
 import warnings
 
 from tradingagents.llm_clients.base_client import BaseLLMClient
-from tradingagents.llm_clients.model_catalog import get_known_models
+from tradingagents.llm_clients.model_catalog import get_known_models, get_model_options
 from tradingagents.llm_clients.validators import validate_model
 
 
@@ -50,3 +50,9 @@ class ModelValidationTests(unittest.TestCase):
                     client.get_llm()
 
                 self.assertEqual(caught, [])
+
+    def test_ollama_catalog_includes_custom_option(self):
+        quick = [m for _, m in get_model_options("ollama", "quick")]
+        deep = [m for _, m in get_model_options("ollama", "deep")]
+        self.assertIn("custom", quick)
+        self.assertIn("custom", deep)

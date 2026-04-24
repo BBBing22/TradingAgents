@@ -102,14 +102,18 @@ MODEL_OPTIONS: ProviderModeOptions = {
     # OpenRouter: fetched dynamically. Azure: any deployed model name.
     "ollama": {
         "quick": [
-            ("Qwen3:latest (8B, local)", "qwen3:latest"),
-            ("GPT-OSS:latest (20B, local)", "gpt-oss:latest"),
-            ("GLM-4.7-Flash:latest (30B, local)", "glm-4.7-flash:latest"),
+            ("TinyLlama:1.1B (local, smoke test)", "tinyllama:1.1b"),
+            ("Qwen2.5:0.5B (local)", "qwen2.5:0.5b"),
+            ("Gemma2:2B (local)", "gemma2:2b"),
+            ("Gemma4:latest (local)", "gemma4:latest"),
+            ("Custom model tag", "custom"),
         ],
         "deep": [
-            ("GLM-4.7-Flash:latest (30B, local)", "glm-4.7-flash:latest"),
-            ("GPT-OSS:latest (20B, local)", "gpt-oss:latest"),
-            ("Qwen3:latest (8B, local)", "qwen3:latest"),
+            ("TinyLlama:1.1B (local, smoke test)", "tinyllama:1.1b"),
+            ("Qwen2.5:1.5B (local)", "qwen2.5:1.5b"),
+            ("Gemma2:2B (local)", "gemma2:2b"),
+            ("Gemma4:latest (local)", "gemma4:latest"),
+            ("Custom model tag", "custom"),
         ],
     },
 }

@@ -131,6 +131,17 @@ For local models with Ollama:
 docker compose --profile ollama run --rm tradingagents-ollama
 ```
 
+For local models with Ollama (Qwen/Gemma) outside Docker:
+```bash
+ollama pull tinyllama:1.1b
+export TRADINGAGENTS_LLM_PROVIDER=ollama
+export TRADINGAGENTS_BACKEND_URL=http://localhost:11434/v1
+export TRADINGAGENTS_QUICK_THINK_LLM=tinyllama:1.1b
+export TRADINGAGENTS_DEEP_THINK_LLM=tinyllama:1.1b
+python scripts/ollama_smoke_test.py
+```
+See [docs/ollama.md](docs/ollama.md) for Qwen/Gemma tags and CLI usage.
+
 ### Required APIs
 
 TradingAgents supports multiple LLM providers. Set the API key for your chosen provider:
