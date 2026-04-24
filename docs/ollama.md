@@ -53,6 +53,14 @@ python -m cli.main
 
 In Step 6 select `Ollama`, then choose a model tag from the list or use `Custom model tag` to type your local tag.
 
+## Yahoo Finance API 제한/代理
+
+If your network hits Yahoo Finance rate limits or region blocks, set a proxy (Clash TUN works well):
+
+```bash
+export TRADINGAGENTS_YFINANCE_PROXY=http://127.0.0.1:7890
+```
+
 ## Optional: Use .env Profile
 
 ```bash

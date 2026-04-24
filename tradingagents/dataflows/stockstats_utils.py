@@ -7,9 +7,31 @@ from yfinance.exceptions import YFRateLimitError
 from stockstats import wrap
 from typing import Annotated
 import os
+from curl_cffi import requests as curl_requests
 from .config import get_config
 
 logger = logging.getLogger(__name__)
+
+
+def get_yfinance_proxy() -> str | None:
+    proxy = os.getenv("TRADINGAGENTS_YFINANCE_PROXY")
+    if proxy:
+        return proxy
+    return os.getenv("HTTPS_PROXY") or os.getenv("HTTP_PROXY")
+
+
+def get_yfinance_session() -> curl_requests.Session:
+    session = curl_requests.Session()
+    proxy = get_yfinance_proxy()
+    if proxy:
+        session.proxies.update({"http": proxy, "https": proxy})
+    return session
+
+
+def configure_yfinance() -> None:
+    proxy = get_yfinance_proxy()
+    if proxy:
+        yf.set_config(proxy={"http": proxy, "https": proxy})
 
 
 def yf_retry(func, max_retries=3, base_delay=2.0):
@@ -21,6 +43,7 @@ def yf_retry(func, max_retries=3, base_delay=2.0):
     """
     for attempt in range(max_retries + 1):
         try:
+            configure_yfinance()
             return func()
         except YFRateLimitError:
             if attempt < max_retries:
@@ -69,14 +92,16 @@ def load_ohlcv(symbol: str, curr_date: str) -> pd.DataFrame:
     if os.path.exists(data_file):
         data = pd.read_csv(data_file, on_bad_lines="skip")
     else:
-        data = yf_retry(lambda: yf.download(
-            symbol,
-            start=start_str,
-            end=end_str,
-            multi_level_index=False,
-            progress=False,
-            auto_adjust=True,
-        ))
+        data = yf_retry(
+            lambda: yf.download(
+                symbol,
+                start=start_str,
+                end=end_str,
+                multi_level_index=False,
+                progress=False,
+                auto_adjust=True,
+            )
+        )
         data = data.reset_index()
         data.to_csv(data_file, index=False)
 

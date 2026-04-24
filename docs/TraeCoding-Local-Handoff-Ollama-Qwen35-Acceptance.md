@@ -298,6 +298,36 @@ chmod +x ~/Desktop/TradingAgents-Ollama.desktop
 - 用本地真实存在的 tag 写入 `.env` 或环境变量
 - 先用小模型跑通链路，再换千问 3.5 / Q4
 
+### 9.3 Yahoo Finance API 限制（429/地区限制/网络受限）
+
+本项目已支持对 yfinance 的代理配置与 429 重试：
+
+- 建议你在 Clash 开启 TUN 后，直接让系统环境变量生效（最省事）
+- 或者显式设置 `TRADINGAGENTS_YFINANCE_PROXY`（优先级最高）
+
+#### Windows（PowerShell）
+
+```powershell
+$env:TRADINGAGENTS_YFINANCE_PROXY="http://127.0.0.1:7890"
+```
+
+#### macOS / Linux
+
+```bash
+export TRADINGAGENTS_YFINANCE_PROXY=http://127.0.0.1:7890
+```
+
+快速验证（不跑全链路，先确认 Yahoo 数据能取到）：
+
+```bash
+python - <<'PY'
+import yfinance as yf
+from tradingagents.dataflows.stockstats_utils import configure_yfinance
+configure_yfinance()
+print(yf.Ticker("SPY").history(period="1d").tail(1))
+PY
+```
+
 ---
 
 ## 10. 最终交付物（建议你放一个文件夹）
@@ -309,4 +339,3 @@ chmod +x ~/Desktop/TradingAgents-Ollama.desktop
 - `03_complete.png`
 - 报告目录（包含 `complete_report.md`）
 - 你使用的 `.env`（不要包含任何真实 API Key；本地 Ollama 不需要 key）
-
